@@ -51,5 +51,6 @@ type SmpConfig struct {
 
 //todo: make these configurable
 var defaultSmpConfig = SmpConfig{
-	IoCapsKeyboardDisplay, byte(OobNotPresent), 0x09, 16, 0x00, 0x01,
+	// IoCapsKeyboardDisplay, byte(OobNotPresent), 0x09, 16, 0x00, 0x01,
+	IoCapsKeyboardOnly, 0x00, 0x2d, 0x10, 0x02, 0x00,
 }

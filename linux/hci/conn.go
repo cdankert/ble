@@ -225,9 +225,11 @@ func (c *Conn) initPairingContext() {
 
 	la := c.LocalAddr().Bytes()
 	lat := uint8(0x00)
-	if (la[0] & 0xc0) == 0xc0 {
-		lat = 0x01
-	}
+
+	// todo: handle address type
+	// if (la[0] & 0xc0) == 0xc0 {
+	// 	lat = 0x01
+	// }
 	ra := c.RemoteAddr().Bytes()
 	rat := c.param.PeerAddressType()
 

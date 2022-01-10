@@ -81,13 +81,35 @@ func smpF6(w, n1, n2, r, ioCap, a1, a2 []byte) ([]byte, error) {
 	}
 
 	// f6(W, N1, N2, R, IOcap, A1, A2) = AES-CMAC W (N1 || N2 || R || IOcap || A1 || A2)
-	m := append(a2, a1...)
-	m = append(m, ioCap...)
+	for i, j := 0, len(n1)-1; i < j; i, j = i+1, j-1 {
+		n1[i], n1[j] = n1[j], n1[i]
+	}
+	for i, j := 0, len(n2)-1; i < j; i, j = i+1, j-1 {
+		n2[i], n2[j] = n2[j], n2[i]
+	}
+	m := append(n1, n2...)
+	for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 {
+		r[i], r[j] = r[j], r[i]
+	}
 	m = append(m, r...)
-	m = append(m, n2...)
-	m = append(m, n1...)
+	for i, j := 0, len(ioCap)-1; i < j; i, j = i+1, j-1 {
+		ioCap[i], ioCap[j] = ioCap[j], ioCap[i]
+	}
+	m = append(m, ioCap...)
+	m = append(m, a1[0], a1[6], a1[5], a1[4], a1[3], a1[2], a1[1])
+	m = append(m, a2[0], a2[6], a2[5], a2[4], a2[3], a2[2], a2[1])
 
-	return aesCMAC(w, m)
+	for i, j := 0, len(m)-1; i < j; i, j = i+1, j-1 {
+		m[i], m[j] = m[j], m[i]
+	}
+
+	re, err := aesCMAC(w, m)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return re, nil
 }
 
 func smpG2(u, v, x, y []byte) (uint32, error) {

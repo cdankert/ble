@@ -143,8 +143,8 @@ func (t *transport) sendDHKeyCheck() error {
 	p := t.pairing
 
 	//Ea = f6 (MacKey, Na, Nb, rb, IOcapA, A, B)
-	la := append(p.localAddr, p.localAddrType)
-	ra := append(p.remoteAddr, p.remoteAddrType)
+	la := append([]byte{p.localAddrType}, p.localAddr...)
+	ra := append([]byte{p.remoteAddrType}, p.remoteAddr...)
 	na := p.localRandom
 	nb := p.remoteRandom
 

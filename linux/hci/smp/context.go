@@ -164,12 +164,17 @@ func (p *pairingContext) calcMacLtk() error {
 
 func (p *pairingContext) checkDHKeyCheck() error {
 	//F6(MacKey, Na, Nb, ra, IOcapA, A, B)
-	la := p.localAddr
-	la = append(la, p.localAddrType)
-	rAddr := p.remoteAddr
-	rAddr = append(rAddr, p.remoteAddrType)
+	la := append([]byte{p.localAddrType}, p.localAddr...)
+	rAddr := append([]byte{p.remoteAddrType}, p.remoteAddr...)
 	na := p.localRandom
+	for i, j := 0, len(na)-1; i < j; i, j = i+1, j-1 {
+		na[i], na[j] = na[j], na[i]
+	}
+
 	nb := p.remoteRandom
+	for i, j := 0, len(nb)-1; i < j; i, j = i+1, j-1 {
+		nb[i], nb[j] = nb[j], nb[i]
+	}
 
 	ioCap := sliceops.SwapBuf([]byte{p.response.AuthReq, p.response.OobFlag, p.response.IoCap})
 
